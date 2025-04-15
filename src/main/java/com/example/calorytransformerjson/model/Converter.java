@@ -12,7 +12,7 @@
 //
 //     Welcome[] data = Converter.fromJsonString(jsonString);
 
-package org.example;
+package com.example.calorytransformerjson.model;
 
 import java.io.IOException;
 import com.fasterxml.jackson.databind.*;

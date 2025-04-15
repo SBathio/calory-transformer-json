@@ -1,4 +1,4 @@
-package org.example;
+package com.example.calorytransformerjson.model;
 
 import java.io.IOException;
 import com.fasterxml.jackson.annotation.*;

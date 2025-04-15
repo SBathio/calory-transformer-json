@@ -1,0 +1,4 @@
+rootProject.name = 'calory-transformer-json'
+include 'calory-transformer-json' // instead of 'core:service'
+
+

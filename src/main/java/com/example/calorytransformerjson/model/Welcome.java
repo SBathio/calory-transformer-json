@@ -1,4 +1,4 @@
-package org.example;
+package com.example.calorytransformerjson.model;
 
 import com.fasterxml.jackson.annotation.*;
 import java.time.LocalDate;
@@ -20,6 +20,7 @@ public class Welcome {
     private Type type;
     private String favorite;
     private Procedence procedence;
+    private double caloriesPer100g;
 
     @JsonProperty("id")
     public long getID() { return id; }
@@ -100,4 +101,11 @@ public class Welcome {
     public Procedence getProcedence() { return procedence; }
     @JsonProperty("procedence")
     public void setProcedence(Procedence value) { this.procedence = value; }
+
+    public double getCaloriesPer100g() {
+        return caloriesPer100g;
+    }
+    public void setCaloriesPer100g(double caloriesPer100g) {
+        this.caloriesPer100g = caloriesPer100g;
+    }
 }
