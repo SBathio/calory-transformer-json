@@ -38,3 +38,5 @@ jobs:
           push: true
           platforms: linux/amd64
           tags: ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+      - name: 🧪 Verify build output
+        run: ls -l build/libs

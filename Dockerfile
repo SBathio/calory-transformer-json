@@ -5,7 +5,7 @@ FROM openjdk:17-jdk-slim
 WORKDIR /
 
 # Copy the Spring Boot fat JAR
-COPY build/libs/calory-transformer-json-0.0.1-SNAPSHOT.jar app.jar
+COPY build/libs/*.jar app.jar
 
 # Ensure port 8080 is exposed
 EXPOSE 8080
