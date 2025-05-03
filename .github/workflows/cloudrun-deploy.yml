@@ -41,7 +41,7 @@ jobs:
           context: .
           push: true
           platforms: linux/amd64
-          tags: docker.io/sigoubathily/calory-transformer-json:latest
+          tags: gcr.io/${{ secrets.GCP_PROJECT_ID }}/calory-transformer-json:latest
 
       - name: 🚀 Deploy to Cloud Run
         uses: google-github-actions/deploy-cloudrun@v1
