@@ -7,6 +7,8 @@ on:
 env:
   IMAGE_NAME: calory-transformer-json
   IMAGE_TAG: latest
+  REGION: us-central1
+  REPO_NAME: docker-repo
 
 jobs:
   build-and-push:
@@ -22,10 +24,14 @@ jobs:
           distribution: temurin
           java-version: 17
 
-      - name: ✅ Authenticate to Google Cloud
+      - name: 🔐 Authenticate to Google Cloud
         uses: google-github-actions/auth@v1
         with:
           credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+
+      - name: 🐳 Configure Docker for Artifact Registry
+        run: |
+          gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev --quiet
 
       - name: 🛠 Build with Gradle
         run: ./gradlew clean build
@@ -36,4 +42,4 @@ jobs:
           context: .
           push: true
           platforms: linux/amd64
-          tags: us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/docker-repo/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+          tags: ${{ env.REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ env.REPO_NAME }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
