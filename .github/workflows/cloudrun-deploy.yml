@@ -31,14 +31,14 @@ jobs:
         with:
           context: .
           push: true
-          tags: sigoubathily/calory-transformer-json:latest
+          tags: gcr.io/${{ secrets.GCP_PROJECT_ID }}/calory-transformer-json:latest
 
       - name: Deploy to Cloud Run
         uses: google-github-actions/deploy-cloudrun@v1
         with:
           service: calory-transformer
           region: us-central1
-          image: gcr.io/$PROJECT_ID/calory-transformer-json
+          image: gcr.io/${{ secrets.GCP_PROJECT_ID }}/calory-transformer-json:latest
         env:
           PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
           GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
