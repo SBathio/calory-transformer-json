@@ -1,4 +1,4 @@
-name: Build and Deploy to Cloud Run via Artifact Registry
+name: Deploy to Cloud Run
 
 on:
   push:
@@ -6,55 +6,52 @@ on:
       - main
 
 env:
+  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
   REGION: us-central1
+  REPO_NAME: docker-repo
   IMAGE_NAME: calory-transformer-json
-  REPOSITORY: docker-repo # change to your Artifact Registry repo name
-  SERVICE: calory-transformer
+  IMAGE_TAG: latest
+  FULL_IMAGE: us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/docker-repo/calory-transformer-json:latest
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout source
+      - name: 🧾 Checkout source code
         uses: actions/checkout@v3
 
-      - name: Set up JDK 17
+      - name: 🔧 Set up JDK 17
         uses: actions/setup-java@v3
         with:
           distribution: temurin
           java-version: 17
 
-      - name: Grant execute permission for gradlew
+      - name: ⚙️ Make Gradle wrapper executable
         run: chmod +x gradlew
 
-      - name: Build with Gradle
+      - name: 🛠️ Build project
         run: ./gradlew clean build
 
-      - name: Authenticate with Google Cloud
-        uses: google-github-actions/auth@v1
+      - name: 🔐 Authenticate with GCP
+        uses: google-github-actions/auth@v2
         with:
-          credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+          credentials_json: ${{ secrets.GCP_CREDENTIALS }}
 
-      - name: Configure Docker to use Artifact Registry
-        run: |
-          gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev
+      - name: 🔐 Configure Docker to use Artifact Registry
+        run: gcloud auth configure-docker us-central1-docker.pkg.dev --quiet
 
-      - name: Build and Push to Artifact Registry
-        uses: docker/build-push-action@v4
+      - name: 📦 Build & Push Docker image to Artifact Registry
+        uses: docker/build-push-action@v5
         with:
           context: .
           push: true
-          tags: ${{ env.REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.IMAGE_NAME }}:latest
+          tags: ${{ env.FULL_IMAGE }}
           platforms: linux/amd64
 
-      - name: Deploy to Cloud Run
+      - name: 🚀 Deploy to Cloud Run
         uses: google-github-actions/deploy-cloudrun@v1
         with:
           service: calory-transformer
-          region: us-central1
-          image: us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/docker-repo/calory-transformer-json:latest
-          project: ${{ secrets.GCP_PROJECT_ID }}  # ✅ Explicitly add this line
-        env:
-          PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
+          region: ${{ env.REGION }}
+          image: ${{ env.FULL_IMAGE }}
