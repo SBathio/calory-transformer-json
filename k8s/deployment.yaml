@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: calory-transformer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: calory-transformer
+  template:
+    metadata:
+      labels:
+        app: calory-transformer
+    spec:
+      containers:
+        - name: calory-transformer
+          image: sigoubathily/calory-transformer-json:v2
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
