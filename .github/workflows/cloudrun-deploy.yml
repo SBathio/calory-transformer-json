@@ -26,25 +26,24 @@ jobs:
           java-version: 17
 
       - name: 🔐 Authenticate to Google Cloud
-        id: auth
         uses: google-github-actions/auth@v1
         with:
           credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
 
       - name: 🔑 Configure Docker for Artifact Registry
         run: |
-          gcloud auth configure-docker $REGION-docker.pkg.dev
+          gcloud auth configure-docker us-central1-docker.pkg.dev
 
       - name: 🛠 Build with Gradle
         run: ./gradlew clean build
 
-      - name: 🧱 Build & Push Docker Image to Artifact Registry
+      - name: 🧱 Build & Push Docker Image
         uses: docker/build-push-action@v5
         with:
           context: .
           push: true
           platforms: linux/amd64
-          tags: ${{ env.REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+          tags: us-central1-docker.pkg.dev/calory-transformer-project/docker-repo/calory-transformer-json:latest
 
       - name: 🚀 Deploy to Cloud Run
         uses: google-github-actions/deploy-cloudrun@v1
