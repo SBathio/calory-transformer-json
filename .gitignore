@@ -1,0 +1,74 @@
+### Java ###
+*.class
+*.jar
+*.war
+*.ear
+
+### Gradle ###
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!gradle-wrapper.properties
+
+# Ignore Gradle log files
+*.log
+*.lock
+
+# Distribution archives
+*.zip
+*.tar.gz
+
+# Gradle caches
+**/build/
+**/.gradle/
+
+### IntelliJ IDEA ###
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+
+# IDE specific configuration
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/**/usage.statistics.xml
+.idea/**/dictionaries
+.idea/**/shelf/
+
+# Editor-based personal configs
+.idea/**/dataSources/
+.idea/**/dataSources.local.xml
+.idea/**/dataSources.xml
+.idea/**/databaseSettings.xml
+.idea/**/other.xml
+.idea/httpRequests/
+
+### VSCode (if applicable) ###
+.vscode/
+
+### macOS ###
+.DS_Store
+
+### System files ###
+Thumbs.db
+ehthumbs.db
+desktop.ini
+
+### Docker ###
+*.pid
+*.tar
+docker-compose.override.yml
+
+### Spring Boot ###
+/target/
+/logs/
+/tmp/
+/*.i18n/
+*.h2.db
+*.mv.db
+*.trace.db
+
+### GitHub Actions Cache (optional) ###
+.github/workflows/*.lock
+.github/workflows/*.bak
