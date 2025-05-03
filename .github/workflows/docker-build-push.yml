@@ -37,6 +37,6 @@ jobs:
           context: .
           push: true
           platforms: linux/amd64
-          tags: ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+          tags: us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/docker-repo/calory-transformer-json:latest
       - name: 🧪 Verify build output
         run: ls -l build/libs

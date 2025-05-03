@@ -49,9 +49,12 @@ jobs:
           tags: ${{ env.FULL_IMAGE }}
           platforms: linux/amd64
 
-      - name: 🚀 Deploy to Cloud Run
+      - name: Deploy to Cloud Run
         uses: google-github-actions/deploy-cloudrun@v1
         with:
           service: calory-transformer
-          region: ${{ env.REGION }}
-          image: ${{ env.FULL_IMAGE }}
+          region: us-central1
+          image: us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/docker-repo/calory-transformer-json:latest
+          project: ${{ secrets.GCP_PROJECT_ID }}   # 👈 Explicitly set the correct GCP project
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
