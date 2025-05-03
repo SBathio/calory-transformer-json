@@ -1,4 +1,4 @@
-name: Deploy to Cloud Run
+name: Build & Deploy to Cloud Run
 
 on:
   push:
@@ -6,48 +6,50 @@ on:
       - main
 
 env:
-  IMAGE_NAME: calory-transformer-json
-  IMAGE_TAG: latest
   REGION: us-central1
   REPOSITORY: docker-repo
+  IMAGE: calory-transformer-json
+  SERVICE: calory-transformer
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 🧾 Checkout code
+      - name: 📥 Checkout source
         uses: actions/checkout@v3
 
-      - name: 🔧 Set up JDK 17
+      - name: ☕ Set up JDK 17
         uses: actions/setup-java@v3
         with:
           distribution: temurin
           java-version: 17
 
-      - name: 🔐 Authenticate to Google Cloud
+      - name: 🛠 Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: 🧱 Build project with Gradle
+        run: ./gradlew clean build
+
+      - name: 🔐 Authenticate with Google Cloud
         uses: google-github-actions/auth@v1
         with:
           credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
 
-      - name: 🔑 Configure Docker for Artifact Registry
-        run: |
-          gcloud auth configure-docker us-central1-docker.pkg.dev
+      - name: 🔑 Configure Docker to use Artifact Registry
+        run: gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev --quiet
 
-      - name: 🛠 Build with Gradle
-        run: ./gradlew clean build
-
-      - name: 🧱 Build & Push Docker Image
+      - name: 📦 Build and push Docker image to Artifact Registry
         uses: docker/build-push-action@v5
         with:
           context: .
           push: true
           platforms: linux/amd64
-          tags: us-central1-docker.pkg.dev/calory-transformer-project/docker-repo/calory-transformer-json:latest
+          tags: ${{ env.REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.IMAGE }}:latest
 
       - name: 🚀 Deploy to Cloud Run
         uses: google-github-actions/deploy-cloudrun@v1
         with:
-          service: calory-transformer
+          service: ${{ env.SERVICE }}
           region: ${{ env.REGION }}
-          image: ${{ env.REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+          image: ${{ env.REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.IMAGE }}:latest
