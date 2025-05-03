@@ -1,5 +1,14 @@
-# Dockerfile
+# Use official Java 17 slim image
 FROM openjdk:17-jdk-slim
-VOLUME /tmp
+
+# Set working directory
+WORKDIR /
+
+# Copy the Spring Boot fat JAR
 COPY build/libs/calory-transformer-json-0.0.1-SNAPSHOT.jar app.jar
-ENTRYPOINT ["java", "-jar", "/app.jar"]
+
+# Ensure port 8080 is exposed
+EXPOSE 8080
+
+# Launch the app
+ENTRYPOINT ["java", "-jar", "app.jar"]
