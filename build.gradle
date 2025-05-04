@@ -10,11 +10,17 @@ sourceCompatibility = '17'
 repositories {
 	mavenCentral()
 }
+configurations.all {
+	resolutionStrategy {
+		force 'com.google.guava:guava:31.1-jre' // or try '32.1.2-jre' if you need newer
+	}
+}
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'com.fasterxml.jackson.core:jackson-databind'
 	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+	implementation 'com.google.cloud:google-cloud-pubsub:1.124.0'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 jar {
