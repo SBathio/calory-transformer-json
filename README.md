@@ -18,6 +18,9 @@ A Java-based backend project designed to parse, transform, and serve calorie-rel
 - Gradle
 - RESTful API
 - Jackson for JSON parsing
+- Docker
+- Google Kubernetes Engine (GKE)
+- GitHub Actions for CI/CD
 
 ---
 
@@ -52,19 +55,24 @@ src/
 ---
 
 ## 🧪 Sample API Usage
+
 Once the server is running, test endpoints using Postman or curl:
 
-**GET transformed calorie data:**
+**GET raw calorie data:**
 ```bash
-curl http://localhost:8080/api/calories
+curl http://localhost:8080/calories/source
 ```
 
-**Expected Output:**
-A list of parsed and mapped calorie entries from the internal JSON file.
+**POST transformed calorie data to target:**
+```bash
+curl -X POST http://localhost:8080/calories/target \
+     -H 'Content-Type: application/json' \
+     -d '[{"name":"Apple","calories":95,"fat":0.3,"carbs":25,"protein":0.5}]'
+```
 
 ---
 
-## 🧾 Example JSON Structure
+## 📝 Example JSON Structure
 ```json
 [
   {
@@ -86,14 +94,29 @@ A list of parsed and mapped calorie entries from the internal JSON file.
 
 ---
 
-## 📘 License
+## ⚙️ CI/CD Workflow Description
+
+This project includes an automated continuous integration and delivery pipeline using GitHub Actions and Google Cloud Platform:
+
+- **Build & Test**: Java code is compiled and built using Gradle.
+- **Dockerization**: The application is containerized using Docker.
+- **Push to Artifact Registry**: Docker image is pushed to Google Cloud Artifact Registry.
+- **Deploy to Cloud Run**: Image is deployed to a managed Cloud Run service.
+- **Infrastructure**: GKE Autopilot used for scalable Kubernetes-based backend infrastructure.
+
+### 📊 CI/CD Architecture
+
+![CI/CD Pipeline Diagram](./docs/ci-cd-pipeline.png)
+
+---
+
+## 📚 License
 This project is open source and available under the [MIT License](LICENSE).
 
 ---
 
-## 🙋‍♂️ Author
+## 🙇‍♂️ Author
 **Sigou Bathily**  
 [LinkedIn](https://www.linkedin.com/in/sbathily)  |  [GitHub](https://github.com/SBathio)
 
 ---
-
